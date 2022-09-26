@@ -28,7 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onAddTask() async {
-    await TaskController().addTask(_taskController.text);
+    if (_taskController.text.isNotEmpty) {
+      await TaskController().addTask(_taskController.text);
+    }
   }
 
   void onMakeDone(String taskId, bool done) async {
@@ -61,10 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          TaskController()
-                              .editTask(taskId, _taskController.text);
-                          Navigator.pop(context);
-                          _taskController.clear();
+                          if (_taskController.text.isNotEmpty) {
+                            TaskController()
+                                .editTask(taskId, _taskController.text);
+                            Navigator.pop(context);
+                            _taskController.clear();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: backgroundColor,
@@ -174,9 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat.yMMMd().format(
-                        data['createdOn'].toDate(),
-                      ),
+                      data['createdOn'] == null
+                          ? DateTime.now().toString()
+                          : DateFormat.yMMMd().format(
+                              data['createdOn'].toDate(),
+                            ),
                     ),
                   ),
                 ),
